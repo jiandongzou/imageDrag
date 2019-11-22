@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=div.content, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+    img{
+        width:100%;
+        cursor:all-scroll;
+     position: absolute ; 
+         top:0;
+        left:0;
+        margin: 0 auto;
+    }
+    </style>
+</head>
+<body>
+    <div class="content" style="width: 1200px;height: 675px;margin:0px auto;overflow: hidden;position: relative;">
+        <img src="img/store.jpg" alt="">
+    </div>
+</body>
+<script src="dist/jquery-1.7.2.js"></script>
+<script>
+    var n=1;
+ $("img").load(function(){
+     var imgwidth= $("img").width();
+     var imgHeight=$("img").height();  
+    //  $("img").css("left",-imgwidth/2);
+    //  $("img").css("top",-imgHeight/2)   
+    $(document).on("mousewheel DOMMouseScroll", function (e) {
+        var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||  // chrome & ie
+                (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));              // firefox
+        if (delta > 0) {
+            // 向上滚
+            console.log("wheelup");
+         n=n+.1;
+        if(n>2){
+            n=2;
+            return false;
+         }
+        $("img").width(imgwidth*n);
+        $("img").height(imgHeight*n);
+      
+       
+        } else if (delta < 0) {
+            // 向下滚
+            console.log(n);
+             console.log("wheeldown");
+             n=n-.1;
+          if($("img").width()*n<=imgwidth){
+             n=1;
+              return false;
+              };
+        $("img").width( imgwidth*n);
+        $("img").height(imgHeight*n);
+             console.log(n);
+        }
+        drag(imgwidth*n,imgHeight*n);
+      });
+  
+
+  })
+  function drag(w,h){
+    $('img').mousedown(function(e){
+            // e.pageX
+            e.preventDefault();
+            var positionDiv = $(this).offset()
+            var p=$(".content").offset();
+            var distenceX = e.pageX - (positionDiv.left-p.left);
+            var distenceY = e.pageY - (positionDiv.top-p.top);
+            $(document).on("mousemove",function(e){
+                var x = e.pageX - distenceX;
+                var y = e.pageY - distenceY;
+                console.log(x,y)
+                if(x<$(".content").width()-w){
+                    x=$(".content").width()-w;
+                }else if(x>0){
+                    x = 0;
+                }
+                if(y<$(".content").height()-h){
+                    y=$(".content").height()-h;
+                }else if(y>0){
+                    y =0;
+                }
+                $('img').css({
+                    'left':x+'px',
+                    'top':y+'px'
+                });
+            });
+            $(document).on("mouseup",function(){
+                $(document).off('mousemove');
+            });
+        });
+  }
+</script>
+</html>
